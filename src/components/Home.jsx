@@ -6,8 +6,9 @@ import { useMotionValue, useTransform, motion, useSpring } from 'framer-motion'
 import loaderAnimation from '../assets/movieanimation.json'
 
 const Home = () => {
-  const [cardWidth, setCardWidth] = useState(500)
-  const cardsInRow = 5
+  
+  const [cardWidth, setCardWidth] = useState(300)
+  const [cardsInRow, setCardsInRow] = useState(2)
   const [wrapperWidth, setWrapperWidth] = useState(cardWidth * cardsInRow)
   const [movies, setMovies] = useState([])
   const [page, setPage] = useState(1)
@@ -21,11 +22,49 @@ const Home = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
   const [windowHeight, setWindowHeight] = useState(window.innerHeight)
   const [loading, setLoading] = useState(false)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
 
   const cardsRef = useRef(null)
 
+ 
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth)
+      setWindowHeight(window.innerHeight)
+      setIsMobile(window.innerWidth < 768)
+      
+      if (window.innerWidth < 640) {
+        setCardWidth(window.innerWidth * 0.85)
+        setCardsInRow(1)
+      } else if (window.innerWidth < 768) {
+        setCardWidth(280)
+        setCardsInRow(2)
+      } else if (window.innerWidth < 1024) {
+        setCardWidth(320)
+        setCardsInRow(3)
+      } else if (window.innerWidth < 1280) {
+        setCardWidth(400)
+        setCardsInRow(4)
+      } else {
+        setCardWidth(500)
+        setCardsInRow(5)
+      }
+    }
+    
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
+  useEffect(() => {
+    setWrapperWidth(cardWidth * cardsInRow)
+  }, [cardWidth, cardsInRow])
+
   const getMousePositions = (e, referenceElement) => {
-    if (!referenceElement) return;
+    if (!referenceElement || isMobile) return;
     
     const positions = {
       x: e.clientX,
@@ -45,11 +84,13 @@ const Home = () => {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
-  // Update motion values in an effect to avoid render loop
+  
   useEffect(() => {
-    x.set(mousePos.left)
-    y.set(mousePos.top)
-  }, [mousePos.left, mousePos.top])
+    if (!isMobile) {
+      x.set(mousePos.left)
+      y.set(mousePos.top)
+    }
+  }, [mousePos.left, mousePos.top, isMobile])
 
   const xSpring = useSpring(x, { stiffness: 10, damping: 10 })
   const ySpring = useSpring(y, { stiffness: 10, damping: 10 })
@@ -99,26 +140,13 @@ const Home = () => {
     getMovies()
   }, [page, group, apiKey, baseUrl])
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth)
-      setWindowHeight(window.innerHeight)
-    }
-    
-    window.addEventListener('resize', handleResize)
-    
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
-
   return (
     <>
-      <Navigation page={page} setPage={setPage} setGroup={setGroup} />
+      <Navigation page={page} setPage={setPage} setGroup={setGroup} isMobile={isMobile} />
       {
         loading ? (
           <div className='h-screen w-screen flex justify-center items-center bg-white'>
-            <div className="w-64 h-64">
+            <div className="w-32 sm:w-64 h-32 sm:h-64">
               <Lottie 
                 animationData={loaderAnimation} 
                 loop={true}
@@ -127,12 +155,13 @@ const Home = () => {
             </div>
           </div>
         ) : (
-          <motion.div className='flex justify-center items-center fixed left-0 top-0 overflow-hidden'
-            style={{ width: wrapperWidth, translateX, translateY }}
+          <motion.div 
+            className={`flex justify-center items-center ${isMobile ? 'relative py-16' : 'fixed left-0 top-0'} overflow-hidden`}
+            style={isMobile ? { width: '100%' } : { width: wrapperWidth, translateX, translateY }}
             ref={cardsRef}
             onMouseMove={(e) => getMousePositions(e, cardsRef.current)}
           >
-            <div className='flex flex-wrap'>
+            <div className={`flex ${isMobile ? 'flex-col items-center' : 'flex-wrap'}`}>
               {Array.isArray(movies) && movies.length > 0 ? (
                 movies.map((movie, i) => (
                   <motion.div
@@ -144,7 +173,7 @@ const Home = () => {
                   </motion.div>
                 ))
               ) : (
-                <div className="text-white text-2xl p-8">No movies found</div>
+                <div className="text-black dark:text-white text-xl sm:text-2xl p-8">No movies found</div>
               )}
             </div>
           </motion.div>
