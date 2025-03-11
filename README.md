@@ -1,5 +1,7 @@
 # Cinema Vault 
 
+##Demo Link : https://cinema-vault-atharva.vercel.app/
+
 A responsive React application that allows users discover movies across different categories. The app features a visually appealing, interactive interface with detailed movie cards.
 
 ## Features
