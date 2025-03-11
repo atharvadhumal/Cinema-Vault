@@ -117,7 +117,7 @@ const Home = () => {
           'x-rapidapi-key': apiKey,
           'x-rapidapi-host': 'tvshow.p.rapidapi.com'
         },
-        signal: abortControllerRef.current!= null && abortControllerRef.current.siganl
+        signal: abortControllerRef.current!= null && abortControllerRef.current.signal
       };
 
       try {
