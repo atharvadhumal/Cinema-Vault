@@ -1,12 +1,32 @@
-# React + Vite
+# Cinema Vault 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive React application that allows users discover movies across different categories. The app features a visually appealing, interactive interface with detailed movie cards.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Movie Categories**: Browse movies by Top Rated, Popular, and Discover categories
+- **Pagination**: Navigate through multiple pages of movie results
+- **Responsive Design**: Fully optimized for mobile, tablet, and desktop experiences
+- **Interactive UI**: Smooth animations and transitions powered by Framer Motion
+- **Movie Details**: Each card displays comprehensive information including:
+  - Movie title
+  - Genres
+  - Original language
+  - Release date
+  - Plot summary
+- **Loading Animations**: User-friendly loading states using Lottie animations
 
-## Expanding the ESLint configuration
+## Technologies Used
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **React.js**: Frontend library for building the user interface
+- **Framer Motion**: Animation library for creating smooth transitions
+- **Lottie**: For loading animations
+- **Tailwind CSS**: Utility-first CSS framework for styling
+- **RapidAPI**: External API integration for movie data
+- **Vite**: Next generation frontend tooling
+
+## Usage
+
+- Use the dropdown menu in the top-right (desktop) or top-right (mobile) to switch between different movie categories
+- Navigate between pages using the arrow controls at the bottom of the screen
+- Click on a movie card to reveal detailed information about the movie
